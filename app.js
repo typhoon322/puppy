@@ -28,36 +28,40 @@ const Photo = mongoose.model('Photo', {
 });
 
 router.get('/', async (ctx, next) => {
-    await Photo.find({isShow: true}, (err, results) => {
-        if(err){
-            console.error(err);
-            ctx.response.body = {code: 1, msg: 'Internal Error'};
-          return;
-        }
-      }).then( (res) => {
-        console.log(res);
-          if(res){
-            ctx.response.body = {code: 0, data: res, msg: 'Success'};//以json数据类型返回值
-          }
-      });
+  const photos = await getPhotos();
+  const greeting = '欢迎光临熊猫咖啡';
+  const response = {
+    images: photos,
+    greeting: greeting
+  };
+  ctx.response.body = {code: 0, data: response, msg: 'Success'};//以json数据类型返回值
 });
 
 router.get('/index', async (ctx, next) => {
+  const photos = await getPhotos();
+  const greeting = '欢迎光临熊猫咖啡';
+  const response = {
+    images: photos,
+    greeting: greeting
+  };
+  ctx.response.body = {code: 0, data: response, msg: 'Success'};//以json数据类型返回值
+});
 
-    await Photo.find({}, function (err, results) {
+function getPhotos(){
+  let photos = null;
+  await Photo.find({isShow: true}, (err, results) => {
         if(err){
             console.error(err);
-            ctx.response.body = {code: 1, msg: 'Internal Error'};
           return;
         }
       }).then( (res) => {
-        console.log(res);
           if(res){
-            ctx.response.body = {code: 0, data: res, msg: 'Success'};//以json数据类型返回值
+            photos = res;
           }
       });
 
-});
+  return photos;
+}
 
 router.get('/photo/:id', async (ctx, next) => {
     await Photo.findById(ctx.params.id, (err, results) => {
