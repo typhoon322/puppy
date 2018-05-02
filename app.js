@@ -47,7 +47,7 @@ router.get('/index', async (ctx, next) => {
   ctx.response.body = {code: 0, data: response, msg: 'Success'};//以json数据类型返回值
 });
 
-function getPhotos(){
+async function getPhotos(){
   let photos = null;
   await Photo.find({isShow: true}, (err, results) => {
         if(err){
